@@ -1,44 +1,67 @@
 package com.example.himalaya.fragments;
 
+import android.content.Intent;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.himalaya.Base.BaseFragment;
+import com.example.himalaya.DetailActivity;
 import com.example.himalaya.R;
 import com.example.himalaya.adapters.RecommendListAdapter;
-import com.example.himalaya.utils.Constants;
+import com.example.himalaya.interfaces.IRecommendViewCallback;
+import com.example.himalaya.presenters.AlbumDetailPresenter;
+import com.example.himalaya.presenters.RecommendPresenter;
 import com.example.himalaya.utils.LogUtil;
-import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
-import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
-import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
+import com.example.himalaya.views.UILoader;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
-import com.ximalaya.ting.android.opensdk.model.album.GussLikeAlbumList;
 
 import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class RecommendFragment extends BaseFragment {
+public class RecommendFragment extends BaseFragment implements IRecommendViewCallback, UILoader.OnRetryClickListener, RecommendListAdapter.OnRecommendItemClickListener {
 
     private static final String TAG = "RecommendFragment";
     private View mRootView;
     private RecyclerView mRecommendRv;
     private RecommendListAdapter mRecommendListAdapter;
+    private RecommendPresenter mRecommendPresenter;
+    private UILoader mUiLoader;
 
     @Override
     protected View onSubViewLoaded(LayoutInflater layoutInflater, ViewGroup container) {
-        mRootView = layoutInflater.inflate(R.layout.fragment_recommend, container, false);
 
+        mUiLoader = new UILoader(getContext()) {
+            @Override
+            protected View getSuccessView(ViewGroup container) {
+                return createSuccessView(layoutInflater, container);
+            }
+        };
+
+        //获取到逻辑层对象
+        mRecommendPresenter = RecommendPresenter.getInstance();
+        //先设置通知接口的注册
+        mRecommendPresenter.registerViewCallback(this);
+        //获取推荐列表
+        mRecommendPresenter.getRecommendList();
+
+        if (mUiLoader.getParent() instanceof ViewGroup) {
+            ((ViewGroup) mUiLoader.getParent()).removeView(mUiLoader);
+        }
+
+        mUiLoader.setOnRetryClickListener(this);
+        //返回view，给界面显示
+        return mUiLoader;
+    }
+
+    private View createSuccessView(LayoutInflater layoutInflater, ViewGroup container) {
+        mRootView = layoutInflater.inflate(R.layout.fragment_recommend, container, false);
         //1.找到控件
         mRecommendRv = mRootView.findViewById(R.id.recommend_list);
         //2.设置布局管理器
@@ -57,45 +80,63 @@ public class RecommendFragment extends BaseFragment {
         //3.设置适配器
         mRecommendListAdapter = new RecommendListAdapter();
         mRecommendRv.setAdapter(mRecommendListAdapter);
-
-        //获取数据
-        getRecommendData();
-
+        mRecommendListAdapter.setOnRecommendItemClickListener(this);
         return mRootView;
     }
 
-    /**获取推荐内容，其实就是猜你喜欢
-     * 3.10.6，获取猜你喜欢专辑
-     */
 
-    private void getRecommendData() {
-        //封装参数
-        Map<String, String> map = new HashMap<>();
-        //这个参数表示一页数据返回多少条
-        map.put(DTransferConstants.LIKE_COUNT, Constants.RECOMMEND_COUNT + "");
-        CommonRequest.getGuessLikeAlbum(map, new IDataCallBack<GussLikeAlbumList>() {
-            @Override
-            public void onSuccess(@Nullable GussLikeAlbumList gussLikeAlbumList) {
-                LogUtil.d(TAG, "thread name -- > " + Thread.currentThread().getName());
-                if (gussLikeAlbumList != null) {
-                    List<Album> albumList = gussLikeAlbumList.getAlbumList();
-                    if (albumList != null) {
-                        //数据回来以后更新UI
-                        upRecommendUI(albumList);
-                    }
-                }
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                LogUtil.d(TAG, "error --> " + i);
-                LogUtil.d(TAG, "errorMsg --> " + s);
-            }
-        });
+    @Override
+    public void onRecommendListLoaded(List<Album> result) {
+        //获取到推荐内容时被调用（成功时）
+        //数据回来后更新UI
+        LogUtil.d(TAG, "onRecommendListLoaded");
+        mRecommendListAdapter.setData(result);
+        mUiLoader.updateStatus(UILoader.UIStatus.SUCCESS);
     }
 
-    private void upRecommendUI(List<Album> albumList) {
-        //设置数据给适配器并更新UI
-        mRecommendListAdapter.setData(albumList);
+    @Override
+    public void onNetworkError() {
+        LogUtil.d(TAG, "onNetworkError");
+        mUiLoader.updateStatus(UILoader.UIStatus.NETWORK_ERROR);
+    }
+
+    @Override
+    public void onEmpty() {
+        LogUtil.d(TAG, "onEmpty");
+        mUiLoader.updateStatus(UILoader.UIStatus.EMPTY);
+    }
+
+    @Override
+    public void onLoading() {
+        LogUtil.d(TAG, "onLoading");
+        mUiLoader.updateStatus(UILoader.UIStatus.LOADING);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //取消接口的注册
+        if (mRecommendPresenter != null) {
+            mRecommendPresenter.unregisterViewCallback(this);
+        }
+    }
+
+    @Override
+    public void onRetryClick() {
+        //网络不佳时用户点击重试
+        //重新获取数据即可
+        if (mRecommendPresenter != null) {
+            mRecommendPresenter.getRecommendList();
+        }
+    }
+
+    @Override
+    public void onItemClick(int position, Album album) {
+        AlbumDetailPresenter.getInstance().setTargetAlbum(album);
+        //根据位置拿到数据
+        //item被点击时,跳转到详情界面
+        Intent intent = new Intent(getContext(), DetailActivity.class);
+        startActivity(intent);
     }
 }

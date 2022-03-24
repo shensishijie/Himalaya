@@ -18,5 +18,17 @@ public interface IAlbumDetailPresenter {
      * @param page
      */
     void getAlbumDetail(int albumId, int page);
+
+    /**
+     * 用于注册UI的回调
+     * @param detailViewCallback
+     */
+    void registerViewCallback(IAlbumDetailViewCallback detailViewCallback);
+
+    /**
+     * 取消UI的回调注册
+     * @param detailViewCallback
+     */
+    void unregisterViewCallback(IAlbumDetailViewCallback detailViewCallback);
 }
 

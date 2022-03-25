@@ -59,9 +59,10 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO:
+                //点击子项
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick();
+                    //需要列表和位置
+                    mItemClickListener.onItemClick(mDetailData, position);
                 }
             }
         });
@@ -90,6 +91,6 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
     }
 
     public interface ItemClickListener {
-        void onItemClick();
+        void onItemClick(List<Track> detailData, int position);
     }
 }

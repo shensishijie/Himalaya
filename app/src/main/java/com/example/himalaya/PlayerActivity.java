@@ -3,6 +3,7 @@ package com.example.himalaya;
 import android.os.Bundle;
 
 import com.example.himalaya.Base.BaseActivity;
+import com.example.himalaya.presenters.PlayerPresenter;
 
 public class PlayerActivity extends BaseActivity {
 
@@ -10,5 +11,7 @@ public class PlayerActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+        PlayerPresenter playerPresenter = PlayerPresenter.getPlayerPresenter();
+        playerPresenter.play();
     }
 }

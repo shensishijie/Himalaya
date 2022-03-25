@@ -9,6 +9,7 @@ import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 import com.ximalaya.ting.android.opensdk.datatrasfer.DeviceInfoProviderDefault;
 import com.ximalaya.ting.android.opensdk.datatrasfer.IDeviceInfoProvider;
+import com.ximalaya.ting.android.opensdk.player.XmPlayerManager;
 import com.ximalaya.ting.android.opensdk.util.SharedPreferencesUtil;
 
 
@@ -20,6 +21,8 @@ public class BaseApplication extends Application {
     private String oaid;
 
     private static Handler sHandler = null;
+
+    private static Context sContext = null;
 
     @Override
     public void onCreate() {
@@ -46,7 +49,12 @@ public class BaseApplication extends Application {
         //初始化LogUtil
         LogUtil.init(this.getPackageName(), false);
 
+        //初始化播放器
+        XmPlayerManager.getInstance(this).init();
+
         sHandler = new Handler();
+
+        sContext = getBaseContext();
 
     }
 
@@ -54,7 +62,9 @@ public class BaseApplication extends Application {
         return sHandler;
     }
 
-
+    public static Context getAppContext() {
+        return sContext;
+    }
 
 
 

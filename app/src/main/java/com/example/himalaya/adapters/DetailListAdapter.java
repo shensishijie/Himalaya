@@ -20,6 +20,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
     private List<Track> mDetailData = new ArrayList<>();
     private SimpleDateFormat mUpdateDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat mDurationFormat = new SimpleDateFormat("mm:ss");
+    private ItemClickListener mItemClickListener;
 
     @NonNull
     @Override
@@ -55,6 +56,16 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
         String updateTimeText = mUpdateDateFormat.format(track.getUpdatedAt());
         updateDateTv.setText(updateTimeText);
 
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO:
+                if (mItemClickListener != null) {
+                    mItemClickListener.onItemClick();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -72,5 +83,13 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
         public InnerHolder(@NonNull View itemView) {
             super(itemView);
         }
+    }
+
+    public void setItemClickListener(ItemClickListener listener) {
+        this.mItemClickListener = listener;
+    }
+
+    public interface ItemClickListener {
+        void onItemClick();
     }
 }

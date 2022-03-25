@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.himalaya">
-
-    <!--连接网络-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--用于管理监听网络状态的变化-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--用于管理监听网络状态的变化-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--用于管理监听网络状态的变化-->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <!--获取电话的状态,在打电话的时候暂停播放-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--target >=28 需要设置此权限 -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <!-- 连接网络 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 用于管理监听网络状态的变化 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于管理监听网络状态的变化 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于管理监听网络状态的变化 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 获取电话的状态,在打电话的时候暂停播放 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- target >=28 需要设置此权限 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".Base.BaseApplication"
@@ -23,7 +17,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".PlayerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,9 +30,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DetailActivity">
-
-        </activity>
+        <activity android:name=".DetailActivity"/>
     </application>
 
 </manifest>

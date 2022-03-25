@@ -1,10 +1,14 @@
 package com.example.himalaya;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +30,7 @@ import com.example.himalaya.presenters.AlbumDetailPresenter;
 import com.example.himalaya.utils.ImageBlur;
 import com.example.himalaya.utils.LogUtil;
 import com.example.himalaya.views.RoundRectImageView;
+import com.example.himalaya.views.UILoader;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 
@@ -33,7 +38,7 @@ import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
 import java.util.List;
 
-public class DetailActivity extends BaseActivity implements IAlbumDetailViewCallback {
+public class DetailActivity extends BaseActivity implements IAlbumDetailViewCallback, UILoader.OnRetryClickListener, DetailListAdapter.ItemClickListener {
 
     private static final String TAG = "DetailActivity";
     private ImageView mLargeCover;
@@ -44,6 +49,9 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
     private int mCurrentPage = 1;
     private RecyclerView mDetailList;
     private DetailListAdapter mDetailListAdapter;
+    private FrameLayout mDetailListContainer;
+    private UILoader mUiLoader;
+    private long mCurrentId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +67,30 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
     }
 
     private void initView() {
+        mDetailListContainer = this.findViewById(R.id.detail_list_container);
+        if (mUiLoader == null) {
+            mUiLoader = new UILoader(this) {
+                @Override
+                protected View getSuccessView(ViewGroup container) {
+                    return createSuccessView(container);
+                }
+            };
+            mDetailListContainer.removeAllViews();
+            mDetailListContainer.addView(mUiLoader);
+            mUiLoader.setOnRetryClickListener(DetailActivity.this);
+        }
+
         mLargeCover = this.findViewById(R.id.iv_large_cover);
         mSmallCover = this.findViewById(R.id.iv_small_cover);
         mAlbumTitle = this.findViewById(R.id.tv_album_title);
         mAlbumAuthor = this.findViewById(R.id.tv_album_author);
-        mDetailList = this.findViewById(R.id.album_detail_list);
+
+    }
+
+    private View createSuccessView(ViewGroup container) {
+        View detailListView = LayoutInflater.from(this).inflate(R.layout.item_detail_list, container, false);
+
+        mDetailList = detailListView.findViewById(R.id.album_detail_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mDetailList.setLayoutManager(layoutManager);
         mDetailListAdapter = new DetailListAdapter();
@@ -78,12 +105,26 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
                 outRect.right = UIUtil.dip2px(view.getContext(), 5);
             }
         });
+
+        mDetailListAdapter.setItemClickListener(this);
+
+        return detailListView;
     }
 
     @Override
     public void onDetailListLoaded(List<Track> trackList) {
         //更新，设置UI数据
         mDetailListAdapter.setData(trackList);
+
+        if (trackList == null || trackList.size() == 0) {
+            if (mUiLoader != null) {
+                mUiLoader.updateStatus(UILoader.UIStatus.EMPTY);
+            }
+        }
+
+        if (mUiLoader != null) {
+            mUiLoader.updateStatus(UILoader.UIStatus.SUCCESS);
+        }
     }
 
     @Override
@@ -91,7 +132,14 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
 
         long id = album.getId();
         LogUtil.d(TAG, "album -- >" + id);
-        mAlbumDetailPresenter.getAlbumDetail((int) id, mCurrentPage);
+        mCurrentId = id;
+        if (mAlbumDetailPresenter != null) {
+            mAlbumDetailPresenter.getAlbumDetail((int) id, mCurrentPage);
+        }
+        //拿数据过程中显示加载中
+        if (mUiLoader != null) {
+            mUiLoader.updateStatus(UILoader.UIStatus.LOADING);
+        }
 
         if (mAlbumTitle != null) {
             mAlbumTitle.setText(album.getAlbumTitle());
@@ -117,5 +165,27 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
         if (mSmallCover != null) {
             Glide.with(this).load(album.getCoverUrlSmall()).into(mSmallCover);
         }
+    }
+
+    @Override
+    public void onNetworkError() {
+        if (mUiLoader != null) {
+            mUiLoader.updateStatus(UILoader.UIStatus.NETWORK_ERROR);
+        }
+    }
+
+    @Override
+    public void onRetryClick() {
+        //用户网络不佳点击重新加载
+        if (mAlbumDetailPresenter != null) {
+            mAlbumDetailPresenter.getAlbumDetail((int) mCurrentId, mCurrentPage);
+        }
+    }
+
+    @Override
+    public void onItemClick() {
+        //TODO:跳转到播放器界面
+        Intent intent = new Intent(this, PlayerActivity.class);
+        startActivity(intent);
     }
 }

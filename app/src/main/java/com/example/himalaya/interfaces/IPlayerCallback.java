@@ -36,7 +36,7 @@ public interface IPlayerCallback {
      * @param currentProgress
      * @param total
      */
-    void onProgressChange(long currentProgress, long total);
+    void onProgressChange(int currentProgress, int total);
 
     /**
      * 广告正在加载
@@ -47,6 +47,12 @@ public interface IPlayerCallback {
      * 广告加载完成
      */
     void onAdFinish();
+
+    /**
+     * 更新当前播放的jiemu
+     * @param track
+     */
+    void onTrackUpdate(Track track, int playIndex);
 
 
 

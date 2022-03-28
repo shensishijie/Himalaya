@@ -5,8 +5,11 @@
       <map>
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/flow_text_bg.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/selector_palyer_pre.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/selector_play_mode_list_order_looper.xml" value="0.107" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/selector_play_mode_list_revers.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/selector_player_list.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/shape_album_item_bg.xml" value="0.117" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/shape_play_list_bg.xml" value="0.107" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/shape_recommend_item_bg_press.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/shape_subscription_bg.xml" value="0.117" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/activity_detail.xml" value="0.2" />
@@ -16,7 +19,11 @@
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/fragment_recommend.xml" value="0.17916666666666667" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_album_datail.xml" value="0.3333333333333333" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_detail_list.xml" value="0.17916666666666667" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_play_list.xml" value="0.16666666666666666" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_recommend.xml" value="0.1328125" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_track_page.xml" value="0.13253527148353997" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/pop_play_list.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/xml/pop_in.xml" value="0.1470713980333476" />
       </map>
     </option>
   </component>

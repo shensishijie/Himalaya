@@ -23,7 +23,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/track_title"
         android:layout_marginTop="40dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="150dp"
         tools:background="@color/main_color"
         />
 

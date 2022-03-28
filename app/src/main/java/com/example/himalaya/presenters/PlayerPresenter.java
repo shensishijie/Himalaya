@@ -52,6 +52,12 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     public static final String PLAY_MODE_SP_NAME = "PlayMod";
     public static final String PLAY_MODE_SP_KEY = "currentPlayMode";
 
+    //=========把播放上一首和下一首改成用setPlayList操作===========/
+    private List<Track> mCurrentList;
+    private int mCurrentPlayIndex;
+    //=========把播放上一首和下一首改成用setPlayList操作===========/
+
+
 
     private PlayerPresenter() {
         mPlayerManager = XmPlayerManager.getInstance(BaseApplication.getAppContext());
@@ -83,6 +89,11 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
             mPlayerManager.setPlayList(list, playIndex);
             isPlayListSet = true;
             mCurrentTrack = list.get(playIndex);
+            //=========把播放上一首和下一首改成用setPlayList操作===========/
+            mCurrentList = list;
+            mCurrentPlayIndex = playIndex;
+            //=========把播放上一首和下一首改成用setPlayList操作===========/
+
         } else {
             LogUtil.d(TAG, "mPlayerManager is null");
         }
@@ -105,14 +116,17 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     @Override
     public void playPre() {
         if (mPlayerManager != null) {
-            mPlayerManager.playPre();
+            //mPlayerManager.playPre();
+            setPlayList(mCurrentList, mCurrentPlayIndex-1);
         }
     }
 
     @Override
     public void playNext() {
         if (mPlayerManager != null) {
-            mPlayerManager.playNext();
+            //mPlayerManager.playNext();
+            //TODO:注意！修改后随机播放模式会失效，待解决
+            setPlayList(mCurrentList, mCurrentPlayIndex+1);
         }
     }
 
@@ -174,7 +188,8 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     @Override
     public void playByIndex(int index) {
         if (mPlayerManager != null) {
-            mPlayerManager.play(index);
+            //mPlayerManager.play(index);
+            setPlayList(mCurrentList, index);
         }
     }
 

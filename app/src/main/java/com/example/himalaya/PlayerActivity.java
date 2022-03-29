@@ -2,8 +2,6 @@ package com.example.himalaya;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -30,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.himalaya.presenters.PlayerPresenter.PLAY_MODE_SP_NAME;
 import static com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl.PlayMode.PLAY_MODEL_LIST;
 import static com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl.PlayMode.PLAY_MODEL_LIST_LOOP;
 import static com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl.PlayMode.PLAY_MODEL_RANDOM;
@@ -130,7 +127,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
             @Override
             public void onClick(View v) {
                 //根据现在的播放状态决定是播放还是暂停
-                if (mPlayerPresenter.isPlay()) {
+                if (mPlayerPresenter.isPlaying()) {
                     mPlayerPresenter.pause();
                 } else {
                     mPlayerPresenter.play();
@@ -194,11 +191,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
             @Override
             public void onClick(View v) {
                 //根据当前mode获取下一个mode
-                XmPlayListControl.PlayMode playMode = sPlayModeRule.get(mCurrentMode);
-                if (mPlayerPresenter != null) {
-                    mPlayerPresenter.switchPlayMode(playMode);
-                }
-
+                switchPlayMode();
             }
         });
 
@@ -228,6 +221,37 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
                 }
             }
         });
+
+        mSobPopWindow.setPlayListActionListener(new SobPopWindow.PlayListActionListener() {
+            //popWindow里改变播放模式
+            @Override
+            public void onPlayModeClick() {
+                switchPlayMode();
+            }
+
+            @Override
+            public void onOrderClick() {
+                if (mPlayerPresenter != null) {
+                    mPlayerPresenter.reversePlayList();
+                }
+            }
+        });
+    }
+
+
+    private void switchPlayMode() {
+        XmPlayListControl.PlayMode playMode = sPlayModeRule.get(mCurrentMode);
+        if (mPlayerPresenter != null) {
+            mPlayerPresenter.switchPlayMode(playMode);
+        }
+    }
+
+    private XmPlayListControl.PlayMode getPlayMode() {
+        XmPlayListControl.PlayMode playMode = sPlayModeRule.get(mCurrentMode);
+        if (mPlayerPresenter != null) {
+            mPlayerPresenter.switchPlayMode(playMode);
+        }
+        return playMode;
     }
 
     private void updateBgAlpha(float alpha) {
@@ -314,6 +338,8 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
         //更新播放模式并修改UI
         mCurrentMode = playMode;
         updatePlayModeBtnImg();
+        //更新pop里面的播放模式
+        mSobPopWindow.updatePlayMode(playMode);
     }
 
     @Override
@@ -367,6 +393,11 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
         if (mSobPopWindow != null) {
             mSobPopWindow.setCurrentPlayPosition(playIndex);
         }
+    }
+
+    @Override
+    public void updateListOrder(boolean isReverse) {
+        mSobPopWindow.updateOrderIcon(isReverse);
     }
 
     @Override

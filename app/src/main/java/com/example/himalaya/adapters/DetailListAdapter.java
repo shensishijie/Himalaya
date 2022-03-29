@@ -25,7 +25,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
     @NonNull
     @Override
     public InnerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_datail, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_detail, parent, false);
         return new InnerHolder(itemView);
     }
 

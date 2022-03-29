@@ -54,6 +54,12 @@ public interface IPlayerCallback {
      */
     void onTrackUpdate(Track track, int playIndex);
 
+    /**
+     * 通知UI更新列表顺逆序
+     * @param isReverse
+     */
+    void updateListOrder(boolean isReverse);
+
 
 
 }

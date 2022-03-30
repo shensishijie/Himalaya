@@ -23,4 +23,18 @@ public interface IAlbumDetailViewCallback {
      * 网络错误
      */
     void onNetworkError();
+
+
+    /**
+     * 加载更多的结果
+     * @param size size > 0 表示加载成功, 否则表示加载失败
+     */
+    void onLoaderMoreFinished(int size);
+
+    /**
+     * 下拉加载更多的结果
+     * @param size
+     */
+    void onRefreshFinished(int size);
+
 }

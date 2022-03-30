@@ -2,6 +2,7 @@ package com.example.himalaya.presenters;
 
 import androidx.annotation.Nullable;
 
+import com.example.himalaya.api.XimalayaApi;
 import com.example.himalaya.interfaces.IRecommendPresenter;
 import com.example.himalaya.interfaces.IRecommendViewCallback;
 import com.example.himalaya.utils.Constants;
@@ -22,6 +23,7 @@ public class RecommendPresenter implements IRecommendPresenter {
     private static final String TAG = "RecommendPresenter";
 
     private List<IRecommendViewCallback> mCallbacks = new ArrayList<>();
+    private List<Album> mCurrentRecommend = null;
 
     private RecommendPresenter() {}
 
@@ -45,16 +47,18 @@ public class RecommendPresenter implements IRecommendPresenter {
 
 
 
+
+
+
+
     @Override
     public void getRecommendList() {
         /**获取推荐内容，其实就是猜你喜欢
          * 3.10.6，获取猜你喜欢专辑
          */
         updateLoading();
-        Map<String, String> map = new HashMap<>();
-        //这个参数表示一页数据返回多少条
-        map.put(DTransferConstants.LIKE_COUNT, Constants.COUNT_RECOMMEND + "");
-        CommonRequest.getGuessLikeAlbum(map, new IDataCallBack<GussLikeAlbumList>() {
+        XimalayaApi ximalayaApi = XimalayaApi.getXimalayaApi();
+        ximalayaApi.getRecommendList(new IDataCallBack<GussLikeAlbumList>() {
             @Override
             public void onSuccess(@Nullable GussLikeAlbumList gussLikeAlbumList) {
                 LogUtil.d(TAG, "thread name -- > " + Thread.currentThread().getName());
@@ -62,11 +66,11 @@ public class RecommendPresenter implements IRecommendPresenter {
                     List<Album> albumList = gussLikeAlbumList.getAlbumList();
                     if (albumList != null) {
                         //数据回来以后更新UI
-                        //upRecommendUI(albumList);
                         handlerRecommendResult(albumList);
                     }
                 }
             }
+
             @Override
             public void onError(int i, String s) {
                 LogUtil.d(TAG, "error --> " + i);
@@ -96,8 +100,18 @@ public class RecommendPresenter implements IRecommendPresenter {
                 for (IRecommendViewCallback callback : mCallbacks) {
                     callback.onRecommendListLoaded(albumList);
                 }
+                this.mCurrentRecommend = albumList;
             }
         }
+    }
+
+    /**
+     * 获取当前的推荐列表
+     *
+     * @return 推荐专辑列表，使用前需要判空
+     */
+    public List<Album> getCurrentRecommend() {
+        return mCurrentRecommend;
     }
 
     private void updateLoading() {

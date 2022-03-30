@@ -5,12 +5,14 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +35,9 @@ import com.example.himalaya.utils.ImageBlur;
 import com.example.himalaya.utils.LogUtil;
 import com.example.himalaya.views.RoundRectImageView;
 import com.example.himalaya.views.UILoader;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.bezierlayout.BezierLayout;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
@@ -60,6 +65,9 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
     private PlayerPresenter mPlayerPresenter;
     private List<Track> mCurrentTracks;
     private final static int DEFAULT_PLAY_INDEX = 0;
+    private TwinklingRefreshLayout mRefreshLayout;
+    private boolean mIsLoaderMore = false;
+    private String mCurrentTrackTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +94,11 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
      */
     private void updatePlaySate(boolean playing) {
         mPlayControlBtn.setImageResource(playing ? R.drawable.selector_play_control_pause : R.drawable.selector_play_control_play);
-        mPlayControlTips.setText(playing ? R.string.playing_tips_text : R.string.pause_tips_text);
+        if (!playing) {
+            mPlayControlTips.setText(R.string.click_play_tips_text);
+        } else {
+            mPlayControlTips.setText(mCurrentTrackTitle);
+        }
     }
 
     private void initListener() {
@@ -136,8 +148,10 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
         mSmallCover = this.findViewById(R.id.iv_small_cover);
         mAlbumTitle = this.findViewById(R.id.tv_album_title);
         mAlbumAuthor = this.findViewById(R.id.tv_album_author);
+        //控制播放的图标
         mPlayControlBtn = this.findViewById(R.id.detail_play_control);
         mPlayControlTips = this.findViewById(R.id.play_control_tv);
+        mPlayControlTips.setSelected(true);
 
     }
 
@@ -145,6 +159,8 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
         View detailListView = LayoutInflater.from(this).inflate(R.layout.item_detail_list, container, false);
 
         mDetailList = detailListView.findViewById(R.id.album_detail_list);
+        mRefreshLayout = detailListView.findViewById(R.id.refresh_layout);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mDetailList.setLayoutManager(layoutManager);
         mDetailListAdapter = new DetailListAdapter();
@@ -162,11 +178,50 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
 
         mDetailListAdapter.setItemClickListener(this);
 
+        BezierLayout headerView = new BezierLayout(this);
+        mRefreshLayout.setHeaderView(headerView);
+        mRefreshLayout.setHeaderHeight(120);
+        mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+                BaseApplication.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(DetailActivity.this, "开始下拉刷新..", Toast.LENGTH_SHORT).show();
+                        mRefreshLayout.finishRefreshing();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                //去加载更多内容
+                if (mAlbumDetailPresenter != null) {
+                    mAlbumDetailPresenter.loadMore();
+                    mIsLoaderMore = true;
+                }
+//                BaseApplication.getHandler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(DetailActivity.this, "加载更多完成..", Toast.LENGTH_SHORT).show();
+//                        mRefreshLayout.finishLoadmore();
+//                    }
+//                }, 2000);
+            }
+        });
+
         return detailListView;
     }
 
     @Override
     public void onDetailListLoaded(List<Track> trackList) {
+        if (mRefreshLayout != null && mIsLoaderMore) {
+            mRefreshLayout.finishLoadmore();
+            mIsLoaderMore = false;
+        }
+
         this.mCurrentTracks = trackList;
         //更新，设置UI数据
         mDetailListAdapter.setData(trackList);
@@ -227,6 +282,20 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
         if (mUiLoader != null) {
             mUiLoader.updateStatus(UILoader.UIStatus.NETWORK_ERROR);
         }
+    }
+
+    @Override
+    public void onLoaderMoreFinished(int size) {
+        if (size > 0) {
+            Toast.makeText(this, "成功加载" + size + "条节目", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "没有更多节目了", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRefreshFinished(int size) {
+
     }
 
     @Override
@@ -305,7 +374,12 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
 
     @Override
     public void onTrackUpdate(Track track, int playIndex) {
-
+        if (track != null) {
+            String trackTitle = track.getTrackTitle();
+            if (!TextUtils.isEmpty(trackTitle)) {
+                this.mCurrentTrackTitle = trackTitle;
+            }
+        }
     }
 
     @Override

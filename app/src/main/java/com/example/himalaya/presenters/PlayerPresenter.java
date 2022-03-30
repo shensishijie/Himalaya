@@ -2,17 +2,21 @@ package com.example.himalaya.presenters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.example.himalaya.Base.BaseActivity;
 import com.example.himalaya.Base.BaseApplication;
 import com.example.himalaya.R;
+import com.example.himalaya.api.XimalayaApi;
 import com.example.himalaya.interfaces.IPlayerCallback;
 import com.example.himalaya.interfaces.IPlayerPresenter;
 import com.example.himalaya.utils.LogUtil;
+import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
 import com.ximalaya.ting.android.opensdk.model.PlayableModel;
 import com.ximalaya.ting.android.opensdk.model.advertis.Advertis;
 import com.ximalaya.ting.android.opensdk.model.advertis.AdvertisList;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
+import com.ximalaya.ting.android.opensdk.model.track.TrackList;
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager;
 import com.ximalaya.ting.android.opensdk.player.advertis.IXmAdsStatusListener;
 import com.ximalaya.ting.android.opensdk.player.constants.PlayerConstants;
@@ -29,6 +33,8 @@ import static com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl
 import static com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl.PlayMode.PLAY_MODEL_RANDOM;
 import static com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl.PlayMode.PLAY_MODEL_SINGLE_LOOP;
 
+import androidx.annotation.Nullable;
+
 public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, IXmPlayerStatusListener {
 
     private static final String TAG = "PlayerPresenter";
@@ -39,7 +45,7 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     private final SharedPreferences mPlayModSp;
     private XmPlayListControl.PlayMode mCurrentPlayMode = XmPlayListControl.PlayMode.PLAY_MODEL_LIST;
     private boolean mIsReverse = true;
-
+    private static final int DEFAULT_PLAY_INDEX = 0;
 
     //PLAY_MODEL_LIST
     //PLAY_MODEL_LIST_LOOP
@@ -129,7 +135,7 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
     public void playNext() {
         if (mPlayerManager != null) {
             //mPlayerManager.playNext();
-            //TODO:注意！修改后随机播放模式会失效，待解决
+            //修改随机播放模式
             int value = mCurrentPlayMode == XmPlayListControl.PlayMode.PLAY_MODEL_RANDOM ?
                     (int)(Math.random()*(mCurrentList.size())) : mCurrentIndex + 1;
             setPlayList(mCurrentList, value);
@@ -233,6 +239,26 @@ public class PlayerPresenter implements IPlayerPresenter, IXmAdsStatusListener, 
             iPlayerCallback.onTrackUpdate(mCurrentTrack, mCurrentIndex);
             iPlayerCallback.updateListOrder(mIsReverse);
         }
+    }
+
+    @Override
+    public void playByAlbumId(long id) {
+        //todo:根据专辑id播放
+        XimalayaApi ximalayaApi = XimalayaApi.getXimalayaApi();
+        ximalayaApi.getAlbumDetail(id, 1, new IDataCallBack<TrackList>() {
+            @Override
+            public void onSuccess(@Nullable TrackList trackList) {
+                List<Track> tracks = trackList.getTracks();
+                if (trackList != null && tracks.size() > 0) {
+                    setPlayList(tracks, DEFAULT_PLAY_INDEX);
+                }
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMsg) {
+                Toast.makeText(BaseApplication.getAppContext(), "数据请求出错", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

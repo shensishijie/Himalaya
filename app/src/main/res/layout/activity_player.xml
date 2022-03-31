@@ -24,8 +24,7 @@
         android:layout_below="@+id/track_title"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="150dp"
-        tools:background="@color/main_color"
-        />
+        tools:background="@color/main_color" />
 
     <LinearLayout
         android:layout_width="match_parent"

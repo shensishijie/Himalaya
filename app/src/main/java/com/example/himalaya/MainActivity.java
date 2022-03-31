@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -39,6 +40,8 @@ public class MainActivity extends FragmentActivity implements IPlayerCallback {
     private TextView mSubTitle;
     private ImageView mPlayControl;
     private PlayerPresenter mPlayerPresenter;
+    private View mPlayControlItem;
+    private View mSearchBtn;
 
 
     @Override
@@ -82,6 +85,25 @@ public class MainActivity extends FragmentActivity implements IPlayerCallback {
                 }
             }
         });
+
+        mPlayControlItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mPlayerPresenter.hasPlayList()) {
+                    playFirstRecommend();
+                }
+                //TODO:没有设置播放列表时直接跳转图片和播放列表不显示
+                startActivity(new Intent(MainActivity.this, PlayerActivity.class));
+            }
+        });
+
+        mSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -105,10 +127,8 @@ public class MainActivity extends FragmentActivity implements IPlayerCallback {
         commonNavigator.setAdjustMode(true);
         commonNavigator.setAdapter(mIndicatorAdapter);
 
-
         //ViewPager
         mContentPager = this.findViewById(R.id.content_pager);
-
 
         //创建内容适配器
         FragmentManager supportFragmentManager = getSupportFragmentManager();
@@ -125,6 +145,11 @@ public class MainActivity extends FragmentActivity implements IPlayerCallback {
         mHeaderTitle.setSelected(true);
         mSubTitle = this.findViewById(R.id.main_sub_title);
         mPlayControl = this.findViewById(R.id.main_play_control);
+        mPlayControlItem = this.findViewById(R.id.main_play_control_item);
+
+        //搜索相关的
+        mSearchBtn = this.findViewById(R.id.search_item);
+
 
     }
 

@@ -24,6 +24,7 @@
             android:layout_weight="3" />
 
         <RelativeLayout
+            android:id="@+id/search_item"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -42,14 +43,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:overScrollMode="never"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintBottom_toTopOf="@+id/main_play_control_item"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/main_play_control_item"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_gravity="bottom"
@@ -83,7 +84,7 @@
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
-                android:text="我是大标题"
+                android:text="随便听听"
                 android:textSize="18sp"
                 android:textColor="#444444"
                 />
@@ -92,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#7f7f7f"
-                android:text="作者名称"
+                android:text="喜马拉雅"
                 android:textSize="14dp"
                 />
 

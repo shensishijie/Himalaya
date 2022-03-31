@@ -19,6 +19,7 @@ import com.example.himalaya.Base.BaseActivity;
 import com.example.himalaya.adapters.PlayerTrackPageAdapter;
 import com.example.himalaya.interfaces.IPlayerCallback;
 import com.example.himalaya.presenters.PlayerPresenter;
+import com.example.himalaya.utils.LogUtil;
 import com.example.himalaya.views.SobPopWindow;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
@@ -35,6 +36,7 @@ import static com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl
 
 public class PlayerActivity extends BaseActivity implements IPlayerCallback, ViewPager.OnPageChangeListener {
 
+    private static final String TAG = "PlayerActivity";
     private ImageView mControlBtn;
     private PlayerPresenter mPlayerPresenter;
     private SimpleDateFormat mMinFormat = new SimpleDateFormat("mm:ss");
@@ -381,6 +383,10 @@ public class PlayerActivity extends BaseActivity implements IPlayerCallback, Vie
 
     @Override
     public void onTrackUpdate(Track track, int playIndex) {
+        if (track == null) {
+            LogUtil.d(TAG, "onTrackUpdate -- > track null.");
+            return;
+        }
         mTrackTitleText = track.getTrackTitle();
         if (mTrackTitleTv != null) {
             //设置当前节目的标题

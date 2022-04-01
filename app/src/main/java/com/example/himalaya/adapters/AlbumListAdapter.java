@@ -1,5 +1,6 @@
 package com.example.himalaya.adapters;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,8 @@ import com.ximalaya.ting.android.opensdk.model.album.Album;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecommendListAdapter extends RecyclerView.Adapter
-        <RecommendListAdapter.InnerHolder> {
+public class AlbumListAdapter extends RecyclerView.Adapter
+        <AlbumListAdapter.InnerHolder> {
 
     private static final String TAG = "RecommendListAdapter";
     private List<Album> mData = new ArrayList<>();
@@ -34,7 +35,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecommendListAdapter.InnerHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AlbumListAdapter.InnerHolder holder, int position) {
         //设置数据
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +92,12 @@ public class RecommendListAdapter extends RecyclerView.Adapter
             albumPlayCountTv.setText(album.getPlayCount() + "");
             albumContentCountTv.setText(album.getIncludeTrackCount() + "");
 
-            Glide.with(itemView.getContext()).load(album.getCoverUrlLarge()).into(albumCoverIv);
+            String coverUrlLarge = album.getCoverUrlLarge();
+            if (!TextUtils.isEmpty(coverUrlLarge)) {
+                Glide.with(itemView.getContext()).load(album.getCoverUrlLarge()).into(albumCoverIv);
+            } else {
+                albumCoverIv.setImageResource(R.mipmap.logo);
+            }
         }
     }
 

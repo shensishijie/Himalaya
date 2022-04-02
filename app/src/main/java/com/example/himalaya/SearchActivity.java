@@ -202,6 +202,10 @@ public class SearchActivity extends BaseActivity implements ISearchCallback {
             @Override
             public void onClick(View v) {
                 String keyWord = mInputBox.getText().toString().trim();
+                if (TextUtils.isEmpty(keyWord)) {
+                    Toast.makeText(SearchActivity.this, "搜索关键字不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (mSearchPresenter != null) {
                     mSearchPresenter.doSearch(keyWord);
                 }

@@ -22,6 +22,7 @@
         android:background="@color/white">
 
         <TextView
+            android:id="@+id/detail_sub_btn"
             android:layout_width="75dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"

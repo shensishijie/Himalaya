@@ -23,7 +23,8 @@ public class AlbumListAdapter extends RecyclerView.Adapter
 
     private static final String TAG = "RecommendListAdapter";
     private List<Album> mData = new ArrayList<>();
-    private OnRecommendItemClickListener mItemClickListener = null;
+    private OnAlbumItemClickListener mItemClickListener = null;
+    private OnAlbumItemLongClickListener mLongClickListener = null;
 
     @NonNull
     @Override
@@ -46,6 +47,18 @@ public class AlbumListAdapter extends RecyclerView.Adapter
                     mItemClickListener.onItemClick(clickPosition, mData.get(clickPosition));
                 }
                 LogUtil.d(TAG, "holder.itemView click -->" + v.getTag());
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mLongClickListener != null) {
+                    int clickPosition = (int) v.getTag();
+                    mLongClickListener.onItemLongClick(mData.get(clickPosition));
+                }
+                //true表示消费掉该事件
+                return true;
             }
         });
 
@@ -101,11 +114,22 @@ public class AlbumListAdapter extends RecyclerView.Adapter
         }
     }
 
-    public void setOnRecommendItemClickListener(OnRecommendItemClickListener listener) {
+    public void setAlbumItemClickListener(OnAlbumItemClickListener listener) {
         this.mItemClickListener = listener;
     }
 
-    public interface OnRecommendItemClickListener {
+    public interface OnAlbumItemClickListener {
         void onItemClick(int position, Album album);
+    }
+
+    public void setOnAlbumItemLongClickListener(OnAlbumItemLongClickListener listener) {
+        this.mLongClickListener = listener;
+    }
+
+    /**
+     * item长按的接口
+     */
+    public interface OnAlbumItemLongClickListener {
+        void onItemLongClick(Album album);
     }
 }

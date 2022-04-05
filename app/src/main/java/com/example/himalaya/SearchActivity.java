@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.himalaya.Base.BaseActivity;
@@ -28,7 +29,6 @@ import com.example.himalaya.adapters.SearchRecommendAdapter;
 import com.example.himalaya.interfaces.ISearchCallback;
 import com.example.himalaya.presenters.AlbumDetailPresenter;
 import com.example.himalaya.presenters.SearchPresenter;
-import com.example.himalaya.utils.Constants;
 import com.example.himalaya.utils.LogUtil;
 import com.example.himalaya.views.FlowTextLayout;
 import com.example.himalaya.views.UILoader;
@@ -101,6 +101,15 @@ public class SearchActivity extends BaseActivity implements ISearchCallback {
                 protected View getSuccessView(ViewGroup container) {
                     return createSuccessView();
                 }
+
+                @Override
+                protected View getEmptyView() {
+                    //创建一个新的
+                    View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_empty_view, this, false);
+                    TextView tipsView = emptyView.findViewById(R.id.empty_view_tips_tv);
+                    tipsView.setText(R.string.search_no_content_tips_text);
+                    return emptyView;
+                }
             };
             if (mUILoader.getParent() instanceof ViewGroup) {
                 ((ViewGroup) mUILoader.getParent()).removeView(mUILoader);
@@ -157,7 +166,7 @@ public class SearchActivity extends BaseActivity implements ISearchCallback {
             }
         });
 
-        mAlbumListAdapter.setOnRecommendItemClickListener(new AlbumListAdapter.OnRecommendItemClickListener() {
+        mAlbumListAdapter.setAlbumItemClickListener(new AlbumListAdapter.OnAlbumItemClickListener() {
             @Override
             public void onItemClick(int position, Album album) {
                 AlbumDetailPresenter.getInstance().setTargetAlbum(album);
@@ -323,7 +332,7 @@ public class SearchActivity extends BaseActivity implements ISearchCallback {
         if (mSearchRecommendAdapter != null) {
             mSearchRecommendAdapter.setData(keyWordList);
         }
-        //todo:控制UI的状态和隐藏显示
+        //控制UI的状态和隐藏显示
         mUILoader.updateStatus(UILoader.UIStatus.SUCCESS);
         hideSuccessView();
         mSearchRecommendList.setVisibility(View.VISIBLE);

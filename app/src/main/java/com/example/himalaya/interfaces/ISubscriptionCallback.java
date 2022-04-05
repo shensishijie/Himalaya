@@ -23,4 +23,9 @@ public interface ISubscriptionCallback {
      * @param albums
      */
     void onSubscriptionLoaded(List<Album> albums);
+
+    /**
+     * 订阅数量满了
+     */
+    void onSubFull();
 }

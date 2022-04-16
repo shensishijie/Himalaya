@@ -19,6 +19,7 @@ public class RecommendPresenter implements IRecommendPresenter {
 
     private List<IRecommendViewCallback> mCallbacks = new ArrayList<>();
     private List<Album> mCurrentRecommend = null;
+    private List<Album> mRecommendList;
 
     private RecommendPresenter() {}
 
@@ -51,6 +52,12 @@ public class RecommendPresenter implements IRecommendPresenter {
         /**获取推荐内容，其实就是猜你喜欢
          * 3.10.6，获取猜你喜欢专辑
          */
+        //如果内容不空的话，那么直接使用当前的内容
+        if(mRecommendList != null && mRecommendList.size() > 0) {
+            LogUtil.d(TAG,"getRecommendList -- > from list.");
+            handlerRecommendResult(mRecommendList);
+            return;
+        }
         updateLoading();
         XimalayaApi ximalayaApi = XimalayaApi.getXimalayaApi();
         ximalayaApi.getRecommendList(new IDataCallBack<GussLikeAlbumList>() {
@@ -58,10 +65,10 @@ public class RecommendPresenter implements IRecommendPresenter {
             public void onSuccess(@Nullable GussLikeAlbumList gussLikeAlbumList) {
                 LogUtil.d(TAG, "thread name -- > " + Thread.currentThread().getName());
                 if (gussLikeAlbumList != null) {
-                    List<Album> albumList = gussLikeAlbumList.getAlbumList();
-                    if (albumList != null) {
+                    mRecommendList = gussLikeAlbumList.getAlbumList();
+                    if (mRecommendList != null) {
                         //数据回来以后更新UI
-                        handlerRecommendResult(albumList);
+                        handlerRecommendResult(mRecommendList);
                     }
                 }
             }

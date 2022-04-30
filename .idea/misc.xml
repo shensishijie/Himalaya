@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/flow_text_bg.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/flow_text_bg_press.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/flow_text_color.xml" value="0.151" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/selector_back_btn.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/selector_flow_text.xml" value="0.2125" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/selector_palyer_pre.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/selector_play_control_pause.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/selector_play_control_play.xml" value="0.1" />
@@ -18,6 +20,7 @@
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/selector_search_recommend_bg.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/shape_album_item_bg.xml" value="0.117" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/shape_edit_text_bg.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/shape_edit_text_cursor.xml" value="0.1775" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/shape_play_list_bg.xml" value="0.107" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/shape_recommend_item_bg_normal.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/drawable/shape_recommend_item_bg_press.xml" value="0.1" />
@@ -38,7 +41,7 @@
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_detail_list.xml" value="0.17916666666666667" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_history.xml" value="0.20520833333333333" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_play_list.xml" value="0.16666666666666666" />
-        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_recommend.xml" value="0.1328125" />
+        <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_recommend.xml" value="0.36923078006541266" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_search_recommend.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_subscription.xml" value="0.20520833333333333" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/item_text.xml" value="0.1470713980333476" />

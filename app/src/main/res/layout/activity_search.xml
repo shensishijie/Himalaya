@@ -33,13 +33,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:singleLine="true"
+                android:background="@drawable/shape_edit_text_bg"
+                android:hint="请输入专辑关键字"
                 android:paddingLeft="10dp"
                 android:paddingRight="40dp"
-                android:hint="请输入专辑关键字"
-                android:textCursorDrawable="@drawable/shape_edit_text_cursor"
-                android:background="@drawable/shape_edit_text_bg"
-                />
+                android:singleLine="true"
+                android:textCursorDrawable="@drawable/shape_edit_text_cursor" />
 
             <ImageView
                 android:id="@+id/search_input_delete"

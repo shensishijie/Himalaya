@@ -41,12 +41,6 @@ public class RecommendPresenter implements IRecommendPresenter {
         return sInstance;
     }
 
-
-
-
-
-
-
     @Override
     public void getRecommendList() {
         /**获取推荐内容，其实就是猜你喜欢
@@ -58,6 +52,10 @@ public class RecommendPresenter implements IRecommendPresenter {
             handlerRecommendResult(mRecommendList);
             return;
         }
+        loadRecommendListFormNetwork();
+    }
+
+    private void loadRecommendListFormNetwork() {
         updateLoading();
         XimalayaApi ximalayaApi = XimalayaApi.getXimalayaApi();
         ximalayaApi.getRecommendList(new IDataCallBack<GussLikeAlbumList>() {
@@ -124,7 +122,7 @@ public class RecommendPresenter implements IRecommendPresenter {
 
     @Override
     public void pull2RefreshMore() {
-
+        loadRecommendListFormNetwork();
     }
 
     @Override

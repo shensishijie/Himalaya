@@ -19,7 +19,9 @@ import com.example.himalaya.presenters.AlbumDetailPresenter;
 import com.example.himalaya.presenters.RecommendPresenter;
 import com.example.himalaya.utils.LogUtil;
 import com.example.himalaya.views.UILoader;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.progresslayout.ProgressLayout;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 
 import net.lucode.hackware.magicindicator.buildins.UIUtil;
@@ -34,6 +36,8 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
     private AlbumListAdapter mAlbumListAdapter;
     private RecommendPresenter mRecommendPresenter;
     private UILoader mUiLoader;
+    private TwinklingRefreshLayout mRefreshLayout;
+
 
     @Override
     protected View onSubViewLoaded(LayoutInflater layoutInflater, ViewGroup container) {
@@ -65,8 +69,9 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
         mRootView = layoutInflater.inflate(R.layout.fragment_recommend, container, false);
         //1.找到控件
         mRecommendRv = mRootView.findViewById(R.id.recommend_list);
-        TwinklingRefreshLayout twinklingRefreshLayout = mRootView.findViewById(R.id.over_scroll_view);
-        twinklingRefreshLayout.setPureScrollModeOn();
+        mRefreshLayout = mRootView.findViewById(R.id.over_scroll_view);
+        //mRefreshLayout.setPureScrollModeOn();
+        mRefreshLayout.setEnableLoadmore(false);
         //2.设置布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -84,6 +89,21 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
         mAlbumListAdapter = new AlbumListAdapter();
         mRecommendRv.setAdapter(mAlbumListAdapter);
         mAlbumListAdapter.setAlbumItemClickListener(this);
+
+        ProgressLayout headerView = new ProgressLayout(getActivity());
+        headerView.setColorSchemeResources(R.color.main_color);
+        mRefreshLayout.setHeaderView(headerView);
+        mRefreshLayout.setHeaderHeight(100);
+        mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+                if (mRecommendPresenter != null) {
+                    mRecommendPresenter.pull2RefreshMore();
+                    mRefreshLayout.finishRefreshing();
+                }
+            }
+        });
         return mRootView;
     }
 

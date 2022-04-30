@@ -84,12 +84,13 @@
             android:src="@mipmap/arrow_icon" />
 
     </RelativeLayout>
+
     <com.example.himalaya.views.RoundRectImageView
         android:id="@+id/iv_small_cover"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginLeft="10dp"
         android:layout_below="@id/iv_large_cover"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="-40dp"
         android:scaleType="fitXY"
         tools:background="#f4f4" />
@@ -122,7 +123,6 @@
             android:textColor="@color/sub_text_title"
             android:textSize="12sp"/>
     </LinearLayout>
-
 
 
     <FrameLayout

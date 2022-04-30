@@ -41,8 +41,7 @@
             android:ellipsize="end"
             android:text="为你开启成功之路，给你指向未来！一起行动.."
             android:textColor="#ff848484"
-            android:textSize="12sp"
-            />
+            android:textSize="12sp" />
 
         <LinearLayout
             android:orientation="horizontal"

@@ -220,7 +220,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
 
         BezierLayout headerView = new BezierLayout(this);
         mRefreshLayout.setHeaderView(headerView);
-        mRefreshLayout.setHeaderHeight(120);
+        mRefreshLayout.setHeaderHeight(100);
         mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
@@ -228,10 +228,9 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
                 BaseApplication.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(DetailActivity.this, "开始下拉刷新..", Toast.LENGTH_SHORT).show();
                         mRefreshLayout.finishRefreshing();
                     }
-                }, 2000);
+                }, 500);
             }
 
             @Override

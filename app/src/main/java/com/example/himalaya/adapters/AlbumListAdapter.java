@@ -132,4 +132,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter
     public interface OnAlbumItemLongClickListener {
         void onItemLongClick(Album album);
     }
+
+
+
 }

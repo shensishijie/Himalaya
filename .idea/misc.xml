@@ -50,6 +50,20 @@
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/layout/search_result_layout.xml" value="0.13333333333333333" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/menu/my_navigation_items.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Himalaya/app/src/main/res/xml/pop_in.xml" value="0.1470713980333476" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.147" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/drawable/flow_text_bg.xml" value="0.147" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/drawable/flow_text_bg_press.xml" value="0.147" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/drawable/flow_text_color.xml" value="0.147" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/drawable/ic_launcher_background.xml" value="0.147" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/drawable/selector_back_btn.xml" value="0.147" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/drawable/selector_flow_text.xml" value="0.147" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/drawable/shape_play_list_bg.xml" value="0.147" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/drawable/shape_subscription_bg.xml" value="0.147" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/layout/activity_detail.xml" value="0.225" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/layout/activity_search.xml" value="0.225" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/layout/fragment_recommend.xml" value="0.225" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/layout/item_recommend.xml" value="0.225" />
+        <entry key="..\:/AndroidstudioProject/Himalaya/app/src/main/res/layout/pop_play_list.xml" value="0.225" />
       </map>
     </option>
   </component>
